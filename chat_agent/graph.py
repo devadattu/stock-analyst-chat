@@ -187,7 +187,7 @@ Respond with your routing decision."""
 
 def _supervisor_node(state: ChatState) -> dict:
     llm = _build_llm()
-    structured_llm = llm.with_structured_output(RouteDecision)
+    structured_llm = llm.with_structured_output(RouteDecision, method="function_calling")
 
     specialist_list = "\n".join(f"- {name}: {desc}" for name, desc in SPECIALIST_DESCRIPTIONS.items())
     findings_text = "\n".join(state["findings"]) if state["findings"] else "(none yet)"
