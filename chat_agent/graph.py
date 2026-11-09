@@ -69,8 +69,13 @@ class RouteDecision(TypedDict):
     reasoning: str
 
 
-def _build_llm(model: str | None = None, temperature: float = 0.0) -> ChatAnthropic:
-    return ChatAnthropic(model=model or DEFAULT_MODEL, temperature=temperature)
+def _build_llm(model: str | None = None) -> ChatAnthropic:
+    # Deliberately NOT passing temperature: the installed Anthropic SDK/API
+    # combination for this model rejects an explicit temperature field
+    # outright ("temperature: Extra inputs are not permitted"), regardless
+    # of value or of which with_structured_output method is used. Letting
+    # the API use its own default avoids that entirely.
+    return ChatAnthropic(model=model or DEFAULT_MODEL)
 
 
 def _run_tool_calling_loop(llm_with_tools, tools_by_name: dict, messages: list, max_iterations: int = 3):
